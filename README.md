@@ -18,6 +18,7 @@ To use the routing follow the below steps
 
 after copy the files you can use routing as below ( the script path is app_script folder )
 
+<?php
 
 define('APP',dirname(__FILE__));
 
@@ -47,3 +48,5 @@ else
     /* the following dispatch method will call the function of class given in url seperated by '/' and also it will pass arguments given in url */
     $dispatcher->dispatch();
 }
+
+?>

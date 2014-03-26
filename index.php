@@ -1,23 +1,10 @@
-PHP-Routing-clean-url
-=====================
-
-routing class that can give the cleaner url like in mvc with less code and simple to use!
-
-
-To use the routing follow the below steps
-
-
-
-
-1) you need to have apache server with rewrite module enabled, otherwise routing will not work at all!
-
-2) copy given Lib directory , .htaccess and index.php file in the root of your project
-
-3) on the index.php set the appropriate script path where your controllers are located! and set the default controller name and you are good to go!! :)
-
-
-after copy the files you can use routing as below ( the script path is app_script folder )
-
+<?php
+/**
+ *
+ * @author: Sagar
+ * Date: 3/26/14
+ * Time: 11:25 AM
+ */
 
 define('APP',dirname(__FILE__));
 

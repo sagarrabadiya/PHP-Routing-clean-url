@@ -17,7 +17,7 @@ To use the routing follow the below steps
 
 
 after copy the files you can use routing as below ( the script path is app_script folder )
-
+```php
 <?php
 
 define('APP',dirname(__FILE__));
@@ -50,3 +50,4 @@ else
 }
 
 ?>
+```

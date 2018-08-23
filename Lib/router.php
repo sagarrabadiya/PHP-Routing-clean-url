@@ -6,7 +6,9 @@
  * Time: 11:26 AM
  */
 
-if( !defined('APP') ) echo "Please use the script with entry point, you can't access script directly!";
+if (!defined('APP')) {
+    echo "Please use the script with entry point, you can't access script directly!";
+}
 
 /**
  * Class command
@@ -26,7 +28,7 @@ class command
      * @param $controller
      * @param $parameters
      */
-    public function __construct($controller,$parameters = array())
+    public function __construct($controller, $parameters = array())
     {
         $this->_controller = $controller;
         $this->_parameters = $parameters;
@@ -47,7 +49,6 @@ class command
     {
         return $this->_parameters;
     }
-
 }
 
 
@@ -59,9 +60,8 @@ class UrlInterpreter extends command
     /**
      *
      */
-    function __construct()
+    public function __construct()
     {
-
     }
 
     /**
@@ -70,24 +70,22 @@ class UrlInterpreter extends command
      */
     public function getCommand($defaultController = '')
     {
-        $aFullUrl = explode('/',$_SERVER['REQUEST_URI']);
-        $aScript = explode('/',$_SERVER['SCRIPT_NAME']);
+        $aFullUrl = explode('/', $_SERVER['REQUEST_URI']);
+        $aScript = explode('/', $_SERVER['SCRIPT_NAME']);
 
-        $aCommand = array_diff($aFullUrl,$aScript);
+        $aCommand = array_diff($aFullUrl, $aScript);
         $aCommand = array_values($aCommand);
 
         $sController = $defaultController;
         $aParameters = array();
-        if( !empty( $aCommand ) )
-        {
+        if (!empty($aCommand)) {
             $sController = $aCommand[0];
 
             unset($aCommand[0]);
             $aCommand = array_values($aCommand);
             $aParameters = $aCommand;
-
         }
-        $oCommand = new command($sController,$aParameters);
+        $oCommand = new command($sController, $aParameters);
         return $oCommand ;
     }
 }
@@ -131,8 +129,9 @@ class dispatcher
      */
     private function isController($sControllerName)
     {
-        if( file_exists(APP."/".$this->_scriptLocation.$sControllerName.".php"))
+        if (file_exists(APP."/".$this->_scriptLocation.$sControllerName.".php")) {
             return true;
+        }
 
         return false;
     }
@@ -148,7 +147,7 @@ class dispatcher
     /**
      * @param $sController
      */
-    public function setDefaultController( $sController )
+    public function setDefaultController($sController)
     {
         $this->_defaultController = $sController;
 
@@ -160,40 +159,34 @@ class dispatcher
      */
     public function dispatch()
     {
-        if( $this->isController( $this->_command->getController() ) )
-        {
+        if ($this->isController($this->_command->getController())) {
             require_once APP."/".$this->_scriptLocation.$this->_command->getController().".php";
             $sControllerName = $this->_command->getController();
-            if(class_exists($sControllerName))
-            {
+            if (class_exists($sControllerName)) {
                 $oController = new $sControllerName();
 
                 $aParameter = $this->_command->getParameters();
 
-                if( empty( $aParameter ) )
+                if (empty($aParameter)) {
                     call_user_func(array($oController,'index'));
-                else
-                {
+                } else {
                     $sFunctionName = $aParameter[0];
-                    unset($aParameter[0]);
-                    $aParameter = array_values($aParameter);
-                    if( method_exists($oController,$sFunctionName) )
-                    {
-                        call_user_func_array(array($oController,$sFunctionName),$aParameter);
+                    if (!method_exists($oController, $sFunctionName)) {
+                        $sFunctionName = 'index';
+                    } else {
+                        unset($aParameter[0]);
                     }
-                    else
-                    {
+                    $aParameter = array_values($aParameter);
+                    if (method_exists($oController, $sFunctionName)) {
+                        call_user_func_array(array($oController,$sFunctionName), $aParameter);
+                    } else {
                         $this->notFound();
                     }
                 }
-            }
-            else
-            {
+            } else {
                 $this->notFound();
             }
-        }
-        else
-        {
+        } else {
             $this->notFound();
         }
     }
